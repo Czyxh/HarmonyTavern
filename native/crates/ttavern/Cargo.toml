@@ -1,0 +1,68 @@
+[package]
+name = "ttavern"
+version.workspace = true
+edition.workspace = true
+description = "TauriTavern HarmonyOS native host (NAPI bridge, no Tauri)"
+publish = false
+
+# cdylib -> libttavern.so，由 ArkTS 以 `import native from 'libttavern.so'` 加载
+[lib]
+name = "ttavern"
+crate-type = ["cdylib"]
+
+[dependencies]
+# 版本与上游 TauriTavern scripts/ohos/prepare.py 钉住一致（docs.rs 实测 1.2.0）
+# async: 启用 napi-ohos 内置 tokio 运行时，使 #[napi] async fn 返回 Promise
+# serde-json: P3 起 invoke(command, payloadJson) 通用分发需要
+napi-ohos = { version = "=1.2.0", features = ["async", "serde-json"] }
+napi-derive-ohos = "=1.2.0"
+
+# 宿主基础设施（镜像上游 tauritavern 的非 Tauri 部分）
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", default-features = false, features = ["ansi", "env-filter", "fmt", "std"] }
+tracing-appender = "0.2"
+chrono = { workspace = true }
+tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "sync", "time"] }
+tokio-util = { version = "0.7", default-features = false, features = ["io", "rt"] }
+futures-util = "0.3"
+reqwest = { workspace = true, features = ["http2", "json", "rustls", "socks", "stream"] }
+bytes = "1"
+base64 = "0.23"
+# P6.2: LAN sync 配对码 SVG（上游同款：qrcode 0.14 + svg 特性）。
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+uuid = { workspace = true }
+async-trait = "0.1"
+url = { workspace = true }
+percent-encoding = "2"
+zip = { version = "8", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+mime_guess = "2.0.5"
+filetime = "0.2"
+
+# tt-* workspace crates（与上游 tauritavern 相同集合）
+tt-domain = { path = "../tt-domain" }
+tt-contracts = { path = "../tt-contracts" }
+tt-ports = { path = "../tt-ports" }
+tt-application = { path = "../tt-application" }
+tt-adapter-http = { path = "../tt-adapter-http" }
+tt-adapter-mcp = { path = "../tt-adapter-mcp" }
+tt-adapter-tokenization = { path = "../tt-adapter-tokenization" }
+tt-adapter-sync = { path = "../tt-adapter-sync" }
+tt-adapter-archive = { path = "../tt-adapter-archive" }
+tt-adapter-extension = { path = "../tt-adapter-extension" }
+tt-adapter-provider-http = { path = "../tt-adapter-provider-http" }
+tt-adapter-vector = { path = "../tt-adapter-vector" }
+tt-adapter-storage-core = { path = "../tt-adapter-storage-core" }
+tt-adapter-storage-userdata = { path = "../tt-adapter-storage-userdata" }
+tt-adapter-media = { path = "../tt-adapter-media" }
+tt-adapter-triviumdb = { path = "../tt-adapter-triviumdb" }
+tt-adapter-workspace-shell = { path = "../tt-adapter-workspace-shell" }
+
+# TT-Sync v2 共享协议 crates（crates.io）
+ttsync-contract = { workspace = true }
+ttsync-core = { workspace = true }
+
+[build-dependencies]
+napi-build-ohos = "=1.2.0"

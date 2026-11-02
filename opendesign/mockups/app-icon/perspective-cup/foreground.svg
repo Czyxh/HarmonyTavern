@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>HarmonyTavern · 故事入杯 · 斜侧杯</title><desc>略微俯视的陶瓷酒杯，麦金杯口，斜侧杯柄和书页标记，无对话尖角。</desc><defs>
+  <linearGradient id="background" x1="0" y1="0" x2="0.9" y2="1">
+    <stop stop-color="#6C7D57"/><stop offset="0.48" stop-color="#465C37"/><stop offset="1" stop-color="#34482B"/>
+  </linearGradient>
+  <radialGradient id="ceramic" cx="0.22" cy="0.28" r="0.94">
+    <stop stop-color="#FFFBEF"/><stop offset="0.47" stop-color="#F5EDDC"/><stop offset="0.8" stop-color="#DACBAA"/><stop offset="1" stop-color="#B9A582"/>
+  </radialGradient>
+  <linearGradient id="handle" x1="0" y1="0" x2="1" y2="0.6">
+    <stop stop-color="#B4A07A"/><stop offset="0.38" stop-color="#F6EBD3"/><stop offset="0.72" stop-color="#E5D5B2"/><stop offset="1" stop-color="#C0A980"/>
+  </linearGradient>
+  <linearGradient id="rim" x1="0" y1="0" x2="0.3" y2="1">
+    <stop stop-color="#FFFAE9"/><stop offset="0.43" stop-color="#F7E7C4"/><stop offset="1" stop-color="#D4B477"/>
+  </linearGradient>
+  <linearGradient id="inside" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#68532D"/><stop offset="0.38" stop-color="#96733C"/><stop offset="1" stop-color="#D0A458"/>
+  </linearGradient>
+  <linearGradient id="drink" x1="0" y1="0" x2="0.4" y2="1">
+    <stop stop-color="#C38D39"/><stop offset="0.6" stop-color="#DDB262"/><stop offset="1" stop-color="#E8C581"/>
+  </linearGradient>
+  <linearGradient id="engraving" x1="0" y1="0" x2="1" y2="0.3">
+    <stop stop-color="#4C613B"/><stop offset="0.5" stop-color="#465C37"/><stop offset="1" stop-color="#364B2B"/>
+  </linearGradient>
+  <filter id="shadow" x="-35%" y="-30%" width="185%" height="190%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="18" result="blur"/>
+    <feOffset in="blur" dx="13" dy="26" result="offset"/>
+    <feFlood flood-color="#15200F" flood-opacity="0.29"/>
+    <feComposite in2="offset" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <clipPath id="opening"><ellipse cx="466" cy="344" rx="171" ry="47"/></clipPath>
+</defs><g filter="url(#shadow)"><g transform="rotate(-9 512 512)">
+  <path d="M641 383C703 351 768 364 795 408C828 464 803 551 759 586C733 607 694 618 649 609L650 552C688 560 712 550 731 531C760 502 771 450 750 427C732 408 697 415 663 435Z" fill="#A6926E" transform="translate(1 5)"/>
+  <path d="M641 383C703 351 768 364 795 408C828 464 803 551 759 586C733 607 694 618 649 609L650 552C688 560 712 550 731 531C760 502 771 450 750 427C732 408 697 415 663 435Z" fill="url(#handle)" stroke="#FFEFCC" stroke-opacity="0.45" stroke-width="2"/>
+  <path d="M264 346C264 386 354 412 466 412C578 412 668 386 668 346L650 626C646 680 555 712 454 712C352 712 270 683 266 630Z" fill="url(#ceramic)"/>
+  <path d="M268 620C276 667 359 698 456 698C552 698 631 670 647 630" fill="none" stroke="#AF9A74" stroke-opacity="0.38" stroke-width="5" stroke-linecap="round"/>
+  <path d="M281 396L283 605" fill="none" stroke="#FFFDF5" stroke-opacity="0.45" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="466" cy="346" rx="202" ry="66" fill="url(#rim)" stroke="#FFF8E7" stroke-opacity="0.8" stroke-width="2"/>
+  <ellipse cx="466" cy="344" rx="171" ry="47" fill="url(#inside)"/>
+  <g clip-path="url(#opening)">
+    <ellipse cx="466" cy="366" rx="170" ry="40" fill="url(#drink)"/>
+    <path d="M322 353C369 324 483 320 553 337" fill="none" stroke="#F4D89B" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <path d="M297 344C297 370 373 392 466 392C559 392 635 370 635 344" fill="none" stroke="#FFF5DA" stroke-opacity="0.75" stroke-width="4"/>
+  <path d="M333 453Q389 447 446 473V590Q388 563 336 563ZM464 473Q521 443 580 451L577 560Q519 561 464 590Z" fill="#FFF9E9" transform="translate(0 3)" opacity="0.68"/>
+  <path d="M333 453Q389 447 446 473V590Q388 563 336 563ZM464 473Q521 443 580 451L577 560Q519 561 464 590Z" fill="url(#engraving)"/>
+</g></g></svg>

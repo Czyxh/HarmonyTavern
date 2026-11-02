@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "HarmonyTavern 角色对话与故事创作"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "连接模型，与角色开启故事，管理世界设定和对话"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "HarmonyTavern"
+    },
+    {
+      "name": "AgentExtensionAbility_label",
+      "value": "酒馆连接助手"
+    },
+    {
+      "name": "AgentExtensionAbility_desc",
+      "value": "识别模型接口示例，生成待核对连接草稿"
+    }
+  ]
+}

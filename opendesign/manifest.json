@@ -1,0 +1,92 @@
+{
+  "generated": "2026-11-02T12:32:25.328Z",
+  "sections": [
+    {
+      "id": "mockups",
+      "label": "Mockups",
+      "groups": [
+        {
+          "slug": "rpg-creative",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/rpg-creative/index.html"
+            }
+          ]
+        },
+        {
+          "slug": "rpg-themes",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/rpg-themes/index.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-systems",
+      "label": "Design Systems",
+      "groups": [
+        {
+          "slug": "harmonytavern",
+          "files": [
+            {
+              "label": "assets/icons/brand-icons-sources.json",
+              "path": "design-systems/harmonytavern/assets/icons/brand-icons-sources.json"
+            },
+            {
+              "label": "assets/icons/icon_back.svg",
+              "path": "design-systems/harmonytavern/assets/icons/icon_back.svg"
+            },
+            {
+              "label": "assets/icons/icon_model.svg",
+              "path": "design-systems/harmonytavern/assets/icons/icon_model.svg"
+            },
+            {
+              "label": "assets/icons/icon_refresh.svg",
+              "path": "design-systems/harmonytavern/assets/icons/icon_refresh.svg"
+            },
+            {
+              "label": "assets/icons/icon_status.svg",
+              "path": "design-systems/harmonytavern/assets/icons/icon_status.svg"
+            },
+            {
+              "label": "assets/icons/nav_chat.svg",
+              "path": "design-systems/harmonytavern/assets/icons/nav_chat.svg"
+            },
+            {
+              "label": "assets/icons/oil-icon-style.json",
+              "path": "design-systems/harmonytavern/assets/icons/oil-icon-style.json"
+            },
+            {
+              "label": "assets/rpg-sources.json",
+              "path": "design-systems/harmonytavern/assets/rpg-sources.json"
+            },
+            {
+              "label": "README.md",
+              "path": "design-systems/harmonytavern/README.md"
+            },
+            {
+              "label": "RPG-THEMES.md",
+              "path": "design-systems/harmonytavern/RPG-THEMES.md"
+            },
+            {
+              "label": "SKILL.md",
+              "path": "design-systems/harmonytavern/SKILL.md"
+            },
+            {
+              "label": "tokens/colors_and_type.css",
+              "path": "design-systems/harmonytavern/tokens/colors_and_type.css"
+            },
+            {
+              "label": "tokens/rpg-themes.json",
+              "path": "design-systems/harmonytavern/tokens/rpg-themes.json"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

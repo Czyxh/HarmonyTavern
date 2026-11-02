@@ -1,0 +1,33 @@
+{
+  "agentCards": [
+    {
+      "agentId": "harmonytavern.connection-assistant",
+      "name": "酒馆连接助手",
+      "description": "识别API基础地址、JSON或curl接口示例，生成供用户核对的模型连接草稿。不读取已有密钥，不自动保存配置或调用模型。",
+      "version": "1.0.0",
+      "capabilities": { "streaming": false, "pushNotifications": false, "stateTransitionHistory": false },
+      "defaultInputModes": ["text/plain"],
+      "defaultOutputModes": ["text/plain", "application/json"],
+      "skills": [
+        {
+          "id": "connection-draft",
+          "name": "识别模型连接配置",
+          "description": "从用户提供的HTTP(S)接口地址、JSON或curl示例中识别基础地址、模型ID与接口协议，返回不含密钥的草稿和后续配置指引。",
+          "tags": ["模型连接", "接口配置", "配置草稿"],
+          "examples": ["帮我识别 https://api.openai.com/v1/responses 的连接配置", "帮我整理一段curl接口示例中的基础地址和模型ID"],
+          "inputModes": ["text/plain"],
+          "outputModes": ["text/plain", "application/json"]
+        }
+      ],
+      "iconUrl": "resource://RAWFILE/agent/harmonytavern.png",
+      "category": "productivity",
+      "appInfo": {
+        "bundleName": "com.example.harmonytavern",
+        "moduleName": "entry",
+        "abilityName": "HarmonyTavernAgentExtensionAbility",
+        "deviceTypes": ["phone", "tablet"],
+        "minAppVersion": "1.1.0"
+      }
+    }
+  ]
+}

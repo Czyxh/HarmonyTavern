@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>HarmonyTavern · 故事入杯</title>
+  <desc>苔绿底色，麦金杯沿，纸白酒杯融合对话气泡，负形书页代表角色故事与世界书。</desc>
+  <defs>
+    <mask id="story" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+      <rect width="1024" height="1024" fill="white"/>
+      <path d="M342 408Q405 388 474 427V574Q405 540 342 556ZM498 427Q567 388 630 408V556Q567 540 498 574Z" fill="black" transform="translate(-40 0)"/>
+    </mask>
+  </defs>
+  <rect width="1024" height="1024" fill="#465C37"/>
+  <g transform="translate(-40 0)">
+    <path d="M682 368H730C812 368 854 410 854 488V500C854 578 812 620 730 620H682V566H730Q798 566 798 500V488Q798 422 730 422H682Z" fill="#F5EDDC"/>
+  </g>
+  <g mask="url(#story)">
+    <path d="M310 330H662Q702 330 702 370V596Q702 670 628 670H421L308 748V663Q270 647 270 606V370Q270 330 310 330Z" fill="#F5EDDC" transform="translate(-40 0)"/>
+  </g>
+  <rect x="230" y="262" width="432" height="44" rx="22" fill="#D9B879"/>
+</svg>

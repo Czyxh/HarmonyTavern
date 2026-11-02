@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "rpg_journal",
+      "label": "冒险者手札",
+      "description": "羊皮纸、古铜与墨绿，写下酒馆里的新故事",
+      "kicker": "THE TRAVELER'S JOURNAL",
+      "material": "parchment",
+      "radius": 12,
+      "borderWidth": 1,
+      "art": "rpg_journal.jpg",
+      "light": {
+        "background": "#E9DFC7",
+        "surface": "#F5EDD9",
+        "surfaceHigh": "#E0D2B1",
+        "accent": "#49633B",
+        "ornament": "#98703B"
+      },
+      "dark": {
+        "background": "#25271F",
+        "surface": "#303329",
+        "surfaceHigh": "#3C3F32",
+        "accent": "#C4CF99",
+        "ornament": "#D8B97C"
+      }
+    },
+    {
+      "id": "rpg_sakura",
+      "label": "绯樱物语",
+      "description": "和纸、朱印与靛青，一卷安静的旅途物语",
+      "kicker": "A TALE IN VERMILION",
+      "material": "washi",
+      "radius": 6,
+      "borderWidth": 0.8,
+      "art": "rpg_sakura.jpg",
+      "light": {
+        "background": "#F1E9DC",
+        "surface": "#FCF6EB",
+        "surfaceHigh": "#E5D9C9",
+        "accent": "#943C42",
+        "ornament": "#A47E54"
+      },
+      "dark": {
+        "background": "#222330",
+        "surface": "#2D2E3C",
+        "surfaceHigh": "#3C3B4A",
+        "accent": "#F1ADB2",
+        "ornament": "#D6BD97"
+      }
+    },
+    {
+      "id": "rpg_pixel",
+      "label": "像素旅人",
+      "description": "像素城镇、方格边框，重温掌机里的冒险",
+      "kicker": "A SMALL WORLD, A LONG JOURNEY",
+      "material": "pixel",
+      "radius": 2,
+      "borderWidth": 2,
+      "art": "rpg_pixel.jpg",
+      "light": {
+        "background": "#DDE6C9",
+        "surface": "#F2F3DD",
+        "surfaceHigh": "#CDD9B5",
+        "accent": "#3B573D",
+        "ornament": "#857041"
+      },
+      "dark": {
+        "background": "#192923",
+        "surface": "#23372C",
+        "surfaceHigh": "#304938",
+        "accent": "#C6DEA0",
+        "ornament": "#E0C58B"
+      }
+    },
+    {
+      "id": "rpg_dungeon",
+      "label": "烬火地牢",
+      "description": "风化石壁、锻铁与余烬，向未知的深处前行",
+      "kicker": "WHERE THE EMBERS REMAIN",
+      "material": "stone",
+      "radius": 4,
+      "borderWidth": 1.2,
+      "art": "rpg_dungeon.jpg",
+      "light": {
+        "background": "#DDD7CE",
+        "surface": "#EEE8DF",
+        "surfaceHigh": "#CFC5B7",
+        "accent": "#803E32",
+        "ornament": "#806840"
+      },
+      "dark": {
+        "background": "#1F2023",
+        "surface": "#2A2B2E",
+        "surfaceHigh": "#38383A",
+        "accent": "#E5B279",
+        "ornament": "#C89B63"
+      }
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+use std::time::Instant;
+
+use serde::Deserialize;
+use serde_json::{Map, Value, json};
+
+use super::policy::AgentOperation;
+use crate::errors::ApplicationError;
+use crate::services::agent_profile_service::AgentProfileResolveInput;
+use crate::services::agent_runtime_service::AgentCancelReceiver;
+use crate::services::agent_runtime_service::AgentRuntimeService;
+use crate::services::agent_tools::{AgentToolDispatchOutcome, AgentToolEffect};
+use tt_domain::models::agent::profile::{AgentProfileId, ResolvedAgentProfile};
+use tt_domain::models::agent::{AgentRunEventLevel, AgentTaskStatus, AgentToolResult};
+use tt_domain::models::tool::ToolInvocation;
+
+const MAX_AGENT_DELEGATION_TASK_FIELD_CHARS: usize = 8_000;
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct AgentDelegateArgs {
+    agent_id: String,
+    task: Value,
+}
+
+impl AgentRuntimeService {
+    pub(in crate::services::agent_runtime_service) async fn dispatch_agent_delegate_tool(
+        &self,
+        run_id: &str,
+        invocation_id: &str,
+        call: &ToolInvocation,
+        args: &Map<String, Value>,
+        profile: &ResolvedAgentProfile,
+        _cancel: &AgentCancelReceiver,
+    ) -> Result<AgentToolDispatchOutcome, ApplicationError> {
+        let started = Instant::now();
+        let args = match serde_json::from_value::<AgentDelegateArgs>(Value::Object(args.clone())) {
+            Ok(args) => args,
+            Err(error) => {
+                return Ok(AgentToolDispatchOutcome::error(
+                    call,
+                    "tool.invalid_arguments",
+                    &format!("Invalid agent_delegate arguments: {error}"),
+                    started.elapsed().as_millis(),
+                ));
+            }
+        };
+        if let Err(message) = validate_delegate_task_packet(&args.task) {
+            return Ok(AgentToolDispatchOutcome::error(
+                call,
+                "tool.invalid_arguments",
+                &message,
+                started.elapsed().as_millis(),
+            ));
+        }
+        if !profile.delegation.can_delegate {
+            return Ok(AgentToolDispatchOutcome::error(
+                call,
+                "agent.delegation_policy_denied",
+                "Delegation is not available to you.",
+                started.elapsed().as_millis(),
+            ));
+        }
+        let target_id = match AgentProfileId::parse(&args.agent_id) {
+            Ok(target_id) => target_id,
+            Err(_) => {
+                return self
+                    .agent_target_error(
+                        call,
+                        profile,
+                        AgentOperation::Delegate,
+                        "tool.invalid_arguments",
+                        "Invalid agentId. Use an ID from the available agents below.",
+                        started,
+                    )
+                    .await;
+            }
+        };
+        let target = match self
+            .profile_service
+            .resolve_profile(AgentProfileResolveInput {
+                profile_id: Some(target_id.as_str()),
+                tool_catalog: self.tool_registry.catalog(),
+            })
+            .await
+        {
+            Ok(target) => target,
+            Err(ApplicationError::NotFound(_)) => {
+                return self
+                    .agent_target_error(
+                        call,
+                        profile,
+                        AgentOperation::Delegate,
+                        "agent.target_profile_not_found",
+                        &format!("Agent `{}` is unavailable.", target_id.as_str()),
+                        started,
+                    )
+                    .await;
+            }
+            Err(error) => return Err(error),
+        };
+        if let Err(message) = AgentOperation::Delegate.validate_target(profile, &target) {
+            return self
+                .agent_target_error(
+                    call,
+                    profile,
+                    AgentOperation::Delegate,
+                    "agent.delegation_policy_denied",
+                    &message,
+                    started,
+                )
+                .await;
+        }
+        if let Err(message) = self
+            .validate_parent_delegate_budget(run_id, invocation_id, profile)
+            .await?
+        {
+            return Ok(AgentToolDispatchOutcome::error(
+                call,
+                "agent.delegation_budget_exhausted",
+                &message,
+                started.elapsed().as_millis(),
+            ));
+        }
+
+        let task = self
+            .create_child_task(
+                run_id,
+                invocation_id,
+                target.id.as_str(),
+                call.call_id.as_str(),
+                args.task,
+            )
+            .await?;
+        self.event(
+            run_id,
+            AgentRunEventLevel::Info,
+            "agent_delegate_started",
+            json!({
+                "taskId": task.id.as_str(),
+                "parentInvocationId": invocation_id,
+                "childInvocationId": task.child_invocation_id.as_str(),
+                "targetProfileId": task.target_profile_id.as_str(),
+                "workspaceKey": task.workspace_key.as_str(),
+            }),
+        )
+        .await?;
+        self.active_run_handle(run_id)
+            .await?
+            .scheduler
+            .submit(task.id.clone(), task.child_invocation_id.clone())?;
+
+        let structured = json!({
+            "taskId": task.id.as_str(),
+            "status": task.status,
+            "agentId": target.id.as_str(),
+        });
+        Ok(AgentToolDispatchOutcome::new(
+            AgentToolResult::ok(
+                call,
+                format!(
+                    "Started delegated task `{}` with Agent `{}`. You can continue other work and call `agent_await` when you need its result or current status.",
+                    structured["taskId"].as_str().unwrap_or(""),
+                    target.id.as_str()
+                ),
+                structured,
+            ),
+            AgentToolEffect::None,
+            started.elapsed().as_millis(),
+        ))
+    }
+
+    async fn validate_parent_delegate_budget(
+        &self,
+        run_id: &str,
+        invocation_id: &str,
+        profile: &ResolvedAgentProfile,
+    ) -> Result<Result<(), String>, ApplicationError> {
+        let tasks = self.invocation_repository.list_tasks(run_id).await?;
+        let owned = tasks
+            .iter()
+            .filter(|task| task.parent_invocation_id == invocation_id)
+            .collect::<Vec<_>>();
+        if owned.len() >= profile.delegation.max_invocations_per_run {
+            return Ok(Err(format!(
+                "You have reached the limit of {} delegated tasks.",
+                profile.delegation.max_invocations_per_run
+            )));
+        }
+        let pending = owned
+            .iter()
+            .filter(|task| {
+                matches!(
+                    task.status,
+                    AgentTaskStatus::Queued | AgentTaskStatus::Running
+                )
+            })
+            .count();
+        if pending >= profile.delegation.max_concurrent_invocations {
+            return Ok(Err(format!(
+                "The limit of {} concurrent delegated tasks has been reached. Wait for a task to finish before starting another.",
+                profile.delegation.max_concurrent_invocations
+            )));
+        }
+        Ok(Ok(()))
+    }
+}
+
+fn validate_delegate_task_packet(task: &Value) -> Result<(), String> {
+    let object = task
+        .as_object()
+        .ok_or_else(|| "task must be an object".to_string())?;
+    validate_required_task_string(object, "objective")?;
+    if let Some(value) = object.get("title") {
+        validate_optional_task_string(value, "title")?;
+    }
+    Ok(())
+}
+
+fn validate_required_task_string(
+    object: &serde_json::Map<String, Value>,
+    key: &str,
+) -> Result<(), String> {
+    let value = object
+        .get(key)
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| format!("task.{key} must be a non-empty string"))?;
+    validate_task_string_len(value, key)
+}
+
+fn validate_optional_task_string(value: &Value, key: &str) -> Result<(), String> {
+    if value.is_null() {
+        return Ok(());
+    }
+    let value = value
+        .as_str()
+        .ok_or_else(|| format!("task.{key} must be a string when provided"))?
+        .trim();
+    if value.is_empty() {
+        return Ok(());
+    }
+    validate_task_string_len(value, key)
+}
+
+fn validate_task_string_len(value: &str, key: &str) -> Result<(), String> {
+    if value.len() > MAX_AGENT_DELEGATION_TASK_FIELD_CHARS {
+        return Err(format!(
+            "task.{key} must be <= {MAX_AGENT_DELEGATION_TASK_FIELD_CHARS} chars"
+        ));
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use serde_json::json;
+
+    use super::validate_delegate_task_packet;
+
+    #[test]
+    fn delegate_task_packet_accepts_missing_title() {
+        let task = json!({
+            "objective": "Find one concrete improvement.",
+            "context": { "draft": "A quiet scene." }
+        });
+
+        assert!(validate_delegate_task_packet(&task).is_ok());
+    }
+
+    #[test]
+    fn delegate_task_packet_requires_objective() {
+        let error = validate_delegate_task_packet(&json!({ "title": "Critique" }))
+            .expect_err("missing objective should fail");
+
+        assert_eq!(error, "task.objective must be a non-empty string");
+    }
+
+    #[test]
+    fn delegate_task_packet_rejects_non_string_title_when_provided() {
+        let error = validate_delegate_task_packet(&json!({
+            "title": { "text": "Critique" },
+            "objective": "Find one concrete improvement."
+        }))
+        .expect_err("non-string title should fail");
+
+        assert_eq!(error, "task.title must be a string when provided");
+    }
+
+    #[test]
+    fn delegate_task_packet_rejects_fields_over_8000_chars() {
+        let error = validate_delegate_task_packet(&json!({
+            "title": "Critique",
+            "objective": "a".repeat(8_001)
+        }))
+        .expect_err("overlong objective should fail");
+
+        assert_eq!(error, "task.objective must be <= 8000 chars");
+    }
+}

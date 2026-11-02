@@ -1,0 +1,38 @@
+[
+  {
+    "provider": "alipay",
+    "crop": {
+      "left": 258,
+      "top": 591,
+      "width": 536,
+      "height": 536
+    },
+    "quietZoneModules": 4.5,
+    "payloadSha256": "66f489e087cad935ea1e0ff691d4f6ed4284da31f5feb3e249691cdf374acf84",
+    "checks": [
+      "original",
+      "crop",
+      "designed-card",
+      "360px-card",
+      "240px-qr"
+    ]
+  },
+  {
+    "provider": "wechat",
+    "crop": {
+      "left": 421,
+      "top": 473,
+      "width": 607,
+      "height": 607
+    },
+    "quietZoneModules": 4.5,
+    "payloadSha256": "f12125493b634b9c3e91e2d206292ad8c3ebb3fdd9340dae02c8d63695c03b19",
+    "checks": [
+      "original",
+      "crop",
+      "designed-card",
+      "360px-card",
+      "240px-qr"
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+//! Bootstrap + readiness commands (P3 rows 1–3 of the 28-command batch).
+
+use tt_application::dto::bootstrap_dto::BootstrapMetadataDto;
+use tt_application::dto::group_dto::GroupDto;
+
+use crate::host::Ctx;
+use crate::presentation::errors::CommandError;
+use crate::presentation::helpers::{log_command, map_command_error};
+
+/// `get_bootstrap_metadata` — one snapshot for the ArkTS first paint.
+///
+/// Faithful to upstream: characters are startup-critical (fail the command); groups,
+/// avatars and secret state degrade to empty defaults after their own logged error.
+pub async fn get_bootstrap_metadata(ctx: &Ctx<'_>) -> Result<BootstrapMetadataDto, CommandError> {
+    log_command("get_bootstrap_metadata");
+
+    let services = ctx.services;
+    let characters_fut = async {
+        services
+            .character_service
+            .get_all_characters(true)
+            .await
+            .map_err(map_command_error(
+                "Failed to load bootstrap characters snapshot",
+            ))
+    };
+    let groups_fut = async {
+        services
+            .group_service
+            .get_all_groups()
+            .await
+            .map(|groups| groups.into_iter().map(GroupDto::from).collect())
+            .map_err(map_command_error(
+                "Failed to load bootstrap groups snapshot",
+            ))
+    };
+    let avatars_fut = async {
+        services
+            .avatar_service
+            .get_avatars()
+            .await
+            .map_err(map_command_error(
+                "Failed to load bootstrap avatars snapshot",
+            ))
+    };
+    let secret_state_fut = async {
+        services
+            .secret_service
+            .read_secret_state()
+            .await
+            .map_err(map_command_error(
+                "Failed to load bootstrap secret state snapshot",
+            ))
+    };
+
+    let (characters, groups, avatars, secret_state) =
+        tokio::join!(characters_fut, groups_fut, avatars_fut, secret_state_fut);
+
+    let characters = characters?;
+    let groups = groups.unwrap_or_default();
+    let avatars = avatars.unwrap_or_default();
+    let secret_state = secret_state.unwrap_or_default();
+
+    Ok(BootstrapMetadataDto {
+        ios_policy: ctx.startup.ios_policy.clone(),
+        characters,
+        groups,
+        avatars,
+        secret_state,
+    })
+}
+
+/// `backend_error_bridge_ready` — ArkTS announces its error bridge; queued errors drain.
+pub fn backend_error_bridge_ready(ctx: &Ctx<'_>) -> Result<Vec<String>, CommandError> {
+    log_command("backend_error_bridge_ready");
+    Ok(ctx.backend_errors.mark_bridge_ready_and_drain())
+}
+
+/// `wait_for_backend_ready` — resolves once the service graph is assembled.
+pub async fn wait_for_backend_ready(ctx: &Ctx<'_>) -> Result<(), CommandError> {
+    log_command("wait_for_backend_ready");
+    ctx.backend_readiness
+        .wait_ready()
+        .await
+        .map_err(|error| CommandError::InternalServerError(error.to_string()))
+}

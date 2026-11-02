@@ -1,0 +1,145 @@
+{
+  "source": "https://github.com/lobehub/lobe-icons",
+  "revision": "8064bdc847be0a94c956c00440eb67586af2871f",
+  "license": "MIT",
+  "license_file": "entry/src/main/resources/rawfile/brand-icons-LICENSE.txt",
+  "note": "Brand marks distributed by Lobe Icons. Brand ownership remains with the respective owners. SVG dimensions are normalized to 24; chromatic artwork is preserved. Kimi and Yi currentColor details are resolved to #1F2329 in base and #F1F3F5 in dark resource variants. Monochrome marks use the current theme foreground at runtime. Provider marks identify the service; model marks identify the model family independently of transport or protocol.",
+  "assets": [
+    {
+      "file": "brand_deepseek.svg",
+      "upstream": "packages/static-svg/icons/deepseek-color.svg"
+    },
+    {
+      "file": "brand_openai.svg",
+      "upstream": "packages/static-svg/icons/openai.svg"
+    },
+    {
+      "file": "brand_claude.svg",
+      "upstream": "packages/static-svg/icons/claude-color.svg"
+    },
+    {
+      "file": "brand_gemini.svg",
+      "upstream": "packages/static-svg/icons/gemini-color.svg"
+    },
+    {
+      "file": "brand_kimi.svg",
+      "upstream": "packages/static-svg/icons/kimi-color.svg"
+    },
+    {
+      "file": "brand_zai.svg",
+      "upstream": "packages/static-svg/icons/zai.svg"
+    },
+    {
+      "file": "brand_zhipu.svg",
+      "upstream": "packages/static-svg/icons/zhipu-color.svg"
+    },
+    {
+      "file": "brand_minimax.svg",
+      "upstream": "packages/static-svg/icons/minimax-color.svg"
+    },
+    {
+      "file": "brand_grok.svg",
+      "upstream": "packages/static-svg/icons/grok.svg"
+    },
+    {
+      "file": "brand_cohere.svg",
+      "upstream": "packages/static-svg/icons/cohere-color.svg"
+    },
+    {
+      "file": "brand_qwen.svg",
+      "upstream": "packages/static-svg/icons/qwen-color.svg"
+    },
+    {
+      "file": "brand_doubao.svg",
+      "upstream": "packages/static-svg/icons/doubao-color.svg"
+    },
+    {
+      "file": "brand_wenxin.svg",
+      "upstream": "packages/static-svg/icons/wenxin-color.svg"
+    },
+    {
+      "file": "brand_hunyuan.svg",
+      "upstream": "packages/static-svg/icons/hunyuan-color.svg"
+    },
+    {
+      "file": "brand_stepfun.svg",
+      "upstream": "packages/static-svg/icons/stepfun-color.svg"
+    },
+    {
+      "file": "brand_mistral.svg",
+      "upstream": "packages/static-svg/icons/mistral-color.svg"
+    },
+    {
+      "file": "brand_yi.svg",
+      "upstream": "packages/static-svg/icons/yi-color.svg"
+    },
+    {
+      "file": "brand_baichuan.svg",
+      "upstream": "packages/static-svg/icons/baichuan-color.svg"
+    },
+    {
+      "file": "brand_perplexity.svg",
+      "upstream": "packages/static-svg/icons/perplexity-color.svg"
+    },
+    {
+      "file": "brand_openrouter.svg",
+      "upstream": "packages/static-svg/icons/openrouter-color.svg"
+    },
+    {
+      "file": "brand_siliconcloud.svg",
+      "upstream": "packages/static-svg/icons/siliconcloud-color.svg"
+    },
+    {
+      "file": "brand_groq.svg",
+      "upstream": "packages/static-svg/icons/groq.svg"
+    },
+    {
+      "file": "brand_opencode.svg",
+      "upstream": "packages/static-svg/icons/opencode.svg"
+    },
+    {
+      "file": "brand_chutes.svg",
+      "upstream": "packages/static-svg/icons/chutes.svg"
+    },
+    {
+      "file": "brand_pollinations.svg",
+      "upstream": "packages/static-svg/icons/pollinations.svg"
+    },
+    {
+      "file": "brand_cloudflare.svg",
+      "upstream": "packages/static-svg/icons/cloudflare-color.svg"
+    },
+    {
+      "file": "brand_bedrock.svg",
+      "upstream": "packages/static-svg/icons/bedrock-color.svg"
+    },
+    {
+      "file": "brand_vertexai.svg",
+      "upstream": "packages/static-svg/icons/vertexai-color.svg"
+    },
+    {
+      "file": "brand_together.svg",
+      "upstream": "packages/static-svg/icons/together-color.svg"
+    },
+    {
+      "file": "brand_fireworks.svg",
+      "upstream": "packages/static-svg/icons/fireworks-color.svg"
+    },
+    {
+      "file": "brand_ollama.svg",
+      "upstream": "packages/static-svg/icons/ollama.svg"
+    },
+    {
+      "file": "brand_lmstudio.svg",
+      "upstream": "packages/static-svg/icons/lmstudio.svg"
+    },
+    {
+      "file": "brand_meta.svg",
+      "upstream": "packages/static-svg/icons/meta-color.svg"
+    },
+    {
+      "file": "brand_gemma.svg",
+      "upstream": "packages/static-svg/icons/gemma-color.svg"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+/* Preview tokens extracted from app ColorTokens and appearance resources.
+   ArkUI runtime uiColors remains authoritative, including custom palettes. */
+:root {
+  color-scheme: light;
+  --paper-1: #EAE0CC;
+  --paper-2: #F5EDDC;
+  --paper-3: #DDD1BA;
+  --ink-1: #302B23;
+  --ink-2: #514A3D;
+  --ink-3: #625847;
+  --green-1: #465C37;
+  --green-2: #D8DFC5;
+  --line-1: #B9AC92;
+  --bg-1: var(--paper-1);
+  --surface-primary: var(--paper-2);
+  --surface-high: var(--paper-3);
+  --fg-1: var(--ink-1);
+  --fg-2: var(--ink-2);
+  --fg-3: var(--ink-3);
+  --accent-1: var(--green-1);
+  --accent-container: var(--green-2);
+  --border-subtle: var(--line-1);
+  --font-family: 'HarmonyOS Sans SC', 'HarmonyOS Sans', sans-serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --size-display: 32px;
+  --size-title: 22px;
+  --size-subtitle: 17px;
+  --size-body: 15px;
+  --size-caption: 13px;
+  --size-micro: 12px;
+  --h1: var(--size-title);
+  --h2: var(--size-subtitle);
+  --body: var(--size-body);
+  --caption: var(--size-caption);
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --touch-min: 44px;
+  --press-opacity: 0.64;
+  --motion-short: 150ms;
+  --motion-local: 200ms;
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --paper-1: #24211C;
+  --paper-2: #302C25;
+  --paper-3: #3C372E;
+  --ink-1: #F0E8D8;
+  --ink-2: #D0C4AF;
+  --ink-3: #BEB09A;
+  --green-1: #BCD099;
+  --green-2: #39432E;
+  --line-1: #766A54;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-short: 0ms; --motion-local: 0ms; }
+}

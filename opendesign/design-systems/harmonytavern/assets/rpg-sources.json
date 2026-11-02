@@ -1,0 +1,54 @@
+{
+  "retrieved": "2026-11-02",
+  "assets": [
+    {
+      "theme": "rpg_journal",
+      "title": "Background Elements",
+      "author": "Kenney Vleugels / Kenney",
+      "page": "https://kenney.nl/assets/background-elements",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "used": [
+        "castle_beige.png",
+        "cloud3.png",
+        "cloud5.png",
+        "tree09.png",
+        "tree13.png"
+      ],
+      "adaptation": "Castle landscape composition with project-created hills; desaturated and resized."
+    },
+    {
+      "theme": "rpg_sakura",
+      "title": "Fine Wind, Clear Weather (Red Fuji)",
+      "author": "Katsushika Hokusai",
+      "page": "https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai,_published_by_Nishimuraya_Yohachi_(Eijud%C5%8D)_-_Fine_Wind,_Clear_Weather_(Gaif%C5%AB_kaisei),_also_known_as_Red_Fuji,_from_the_series_Thirty-six_Views_o..._-_Google_Art_Project_-_Cropped.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Katsushika_Hokusai%2C_published_by_Nishimuraya_Yohachi_%28Eijud%C5%8D%29_-_Fine_Wind%2C_Clear_Weather_%28Gaif%C5%AB_kaisei%29%2C_also_known_as_Red_Fuji%2C_from_the_series_Thirty-six_Views_o..._-_Google_Art_Project_-_Cropped.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "license": "Public domain",
+      "adaptation": "Cropped and resized faithful reproduction."
+    },
+    {
+      "theme": "rpg_pixel",
+      "title": "Tiny Town 1.1 — Sample.png",
+      "author": "Kenney",
+      "page": "https://kenney.nl/assets/tiny-town",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "adaptation": "Crop and nearest-neighbor resize; JPEG export."
+    },
+    {
+      "theme": "rpg_dungeon",
+      "title": "The Abbey in the Oakwood",
+      "author": "Caspar David Friedrich",
+      "page": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Abtei_im_Eichwald_-_Google_Art_Project.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/32/Caspar_David_Friedrich_-_Abtei_im_Eichwald_-_Google_Art_Project.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "license": "Public domain",
+      "adaptation": "Cropped, reduced saturation and resized faithful reproduction."
+    }
+  ],
+  "project_created": [
+    "Transparent paper/stone/washi grain textures",
+    "Pixel grid texture",
+    "Theme-specific geometric corner frames"
+  ],
+  "runtime": "Bundled local files only; no network calls"
+}

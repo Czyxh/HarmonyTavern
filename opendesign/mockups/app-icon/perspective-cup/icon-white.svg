@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><rect width="1024" height="1024" fill="#FFFFFF"/>
+  <title>HarmonyTavern · 黑线酒杯</title>
+  <desc>放大的斜侧酒杯，以粗黑轮廓、椭圆杯口和几何书页表达酒馆与故事，不含背景、渐变或阴影。</desc>
+  <g transform="translate(512 512) scale(1.4) translate(-520 -500)">
+    <g transform="rotate(-9 512 512)" stroke="#101010" stroke-width="18" stroke-linejoin="round">
+      <path d="M650 391C717 356 778 370 798 417C823 476 797 550 755 583C725 607 689 611 649 600L650 547C680 557 707 550 726 529C752 502 763 454 745 435C728 418 698 424 661 444Z" fill="#FFFFFF"/>
+      <path d="M264 346L274 620C276 674 354 708 456 708C557 708 642 674 647 620L668 346Z" fill="#FFFFFF"/>
+      <ellipse cx="466" cy="346" rx="202" ry="66" fill="#FFFFFF"/>
+      <ellipse cx="466" cy="346" rx="162" ry="32" fill="#101010" stroke="none"/>
+      <path d="M348 341C391 325 450 322 496 326" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+      <path d="M331 459L389 459L445 484V591L389 567H331ZM466 484L523 459H580V567H523L466 591Z" fill="#101010" stroke="none"/>
+      <path d="M297 597L299 620C305 647 324 658 351 668" fill="none" stroke-width="9" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

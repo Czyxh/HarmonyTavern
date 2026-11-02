@@ -1,0 +1,28 @@
+{
+  "name": "HarmonyTavern rounded reading icons",
+  "source_skill": "https://github.com/oil-oil/oil-icon",
+  "base_style": "linear",
+  "preamble": "Quiet, rounded front-facing line icons for the existing reading, storytelling and glass-control interface.",
+  "format": "SVG",
+  "palette": {
+    "source_stroke": "#526B59",
+    "runtime": "Existing uiColors accent, textPrimary, textSecondary, textTertiary, textInverse and danger, applied through iconTint. Palette and dark-mode selection remain owned by Appearance."
+  },
+  "construction": {
+    "grid": "24 by 24, optical live area approximately 20 by 20",
+    "angles": "Orthogonal geometry and 45-degree diagonals, with rounded curves",
+    "stroke": "1.7, round caps and joins",
+    "corner_radius": "Soft 2-4 unit corners, scaled to the enclosing shape",
+    "detail_budget": "One concrete feature metaphor, at most three small internal details",
+    "shared_parts": "Shared plus, chevron, page, speech bubble and rounded frame geometry",
+    "perspective": "Flat front view",
+    "shadow": "None; transparent background",
+    "motif": "Rounded book and speech frames, with a four-point story spark where semantically appropriate",
+    "weight_hierarchy": "The consistent outline is the defining element; no heavy filled shapes",
+    "fill_rule": "Outline only",
+    "color_rule": "One semantic runtime tint per icon; no baked theme background"
+  },
+  "adaptation": "The skill reserves dense functional UI for vectors. These icons extend the existing SVG system directly; no raster generation or slicing is used.",
+  "resources": "entry/src/main/resources/base/media",
+  "theme_coverage": ["paper", "sage", "sand", "mist", "moon", "rose", "custom", "dark"]
+}

@@ -1,0 +1,306 @@
+﻿agent::start_agent_run(
+    dto: AgentStartRunDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentRunHandleDto, CommandError>
+agent::read_agent_run_checkpoint(
+    dto: AgentReadRunCheckpointDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentReadRunCheckpointResultDto, CommandError>
+agent::resume_agent_run(
+    dto: AgentResumeRunDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentRunHandleDto, CommandError>
+agent::finish_agent_run_presentation(
+    dto: AgentFinishRunPresentationDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::subscribe_agent_run_live_projection(
+    dto: AgentSubscribeRunLiveProjectionDto,
+    channel: Channel<AgentRunLiveUpdateDto>,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::prepare_agent_prompt_assembly(
+    dto: AgentPreparePromptAssemblyDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentPreparePromptAssemblyResultDto, CommandError>
+agent::build_agent_current_model_connection_snapshot(
+    dto: AgentBuildCurrentModelConnectionSnapshotDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentBuildCurrentModelConnectionSnapshotResultDto, CommandError>
+agent::apply_agent_current_model_connection_snapshot(
+    dto: AgentApplyCurrentModelConnectionSnapshotDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentApplyCurrentModelConnectionSnapshotResultDto, CommandError>
+agent::list_agent_profiles(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentListProfilesResultDto, CommandError>
+agent::list_agent_tools(
+    dto: Option<tt_application::dto::agent_dto::AgentListToolsDto>,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentListToolsResultDto, CommandError>
+agent::resolve_agent_system_prompt(
+    dto: AgentResolveSystemPromptDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentResolveSystemPromptResultDto, CommandError>
+agent::load_agent_profile(
+    dto: AgentProfileIdDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentLoadProfileResultDto, CommandError>
+agent::diagnose_agent_profile(
+    dto: AgentProfileIdDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentProfileHealth, CommandError>
+agent::save_agent_profile(
+    dto: AgentSaveProfileDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::delete_agent_profile(
+    dto: AgentProfileIdDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::repair_agent_profile_file(
+    dto: AgentRepairProfileFileDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::retarget_agent_profile_preset_refs(
+    dto: AgentRetargetPresetRefsDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentRetargetPresetRefsResultDto, CommandError>
+agent::cancel_agent_run(
+    dto: AgentCancelRunDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentCancelRunResultDto, CommandError>
+agent::submit_agent_run_guidance(
+    dto: AgentSubmitGuidanceDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentSubmitGuidanceResultDto, CommandError>
+agent::list_active_agent_runs(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<AgentActiveRunDto>, CommandError>
+agent::list_agent_runs(
+    dto: AgentListRunsDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentListRunsResultDto, CommandError>
+agent::plan_agent_run_prune(
+    dto: AgentPlanRunPruneDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentRunPrunePlanDto, CommandError>
+agent::apply_agent_run_prune(
+    dto: AgentApplyRunPruneDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentRunPruneApplyResultDto, CommandError>
+agent::read_agent_run_events(
+    dto: AgentReadEventsDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentReadEventsResultDto, CommandError>
+agent::read_agent_workspace_bytes(
+    dto: AgentReadWorkspaceFileDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<tauri::ipc::Response, CommandError>
+agent::read_agent_workspace_file(
+    dto: AgentReadWorkspaceFileDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentWorkspaceFileDto, CommandError>
+agent::read_agent_task_detail(
+    dto: AgentReadTaskDetailDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentTaskDetailDto, CommandError>
+agent::read_agent_model_turn(
+    dto: AgentReadModelTurnDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentModelTurnDisplayDto, CommandError>
+agent::read_agent_prompt_assembly_request(
+    dto: AgentReadPromptAssemblyRequestDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Option<AgentPromptAssemblyBrokerRequestDto>, CommandError>
+agent::resolve_agent_chat_commit(
+    dto: AgentResolveChatCommitDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::resolve_agent_prompt_assembly(
+    dto: AgentResolvePromptAssemblyDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::resolve_agent_persistent_state_metadata_update(
+    dto: AgentResolvePersistentStateMetadataUpdateDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent::prune_agent_chat_persistent_states(
+    dto: AgentPruneChatPersistentStatesDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentPruneChatPersistentStatesResultDto, CommandError>
+agent::copy_agent_chat_persistent_states(
+    dto: AgentCopyChatPersistentStatesDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent_session::load_agent_session_profile(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentSessionProfileResultDto, CommandError>
+agent_session::save_agent_session_profile(
+    dto: AgentSaveProfileDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent_session::create_agent_session(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentSessionResultDto, CommandError>
+agent_session::list_agent_sessions(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentListSessionsResultDto, CommandError>
+agent_session::rename_agent_session(
+    dto: AgentRenameSessionDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentSessionResultDto, CommandError>
+agent_session::delete_agent_session(
+    dto: AgentDeleteSessionDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+agent_session::read_agent_session(
+    dto: AgentReadSessionDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentReadSessionResultDto, CommandError>
+agent_session::prepare_agent_session_run(
+    dto: AgentPrepareSessionRunDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentPrepareSessionRunResultDto, CommandError>
+agent_session::start_agent_session_run(
+    dto: AgentStartSessionRunDto,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<AgentSessionRunHandleDto, CommandError>
+extension::get_extensions(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<Extension>, CommandError>
+extension::install_extension(
+    url: String,
+    global: bool,
+    branch: Option<String>,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<ExtensionInstallResult, CommandError>
+extension::update_extension(
+    extension_name: String,
+    global: bool,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<ExtensionUpdateResult, CommandError>
+extension::delete_extension(
+    extension_name: String,
+    global: bool,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+extension::get_extension_version(
+    extension_name: String,
+    global: bool,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<ExtensionVersion, CommandError>
+extension::get_extension_branches(
+    extension_name: String,
+    global: bool,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<ExtensionBranch>, CommandError>
+extension::switch_extension_branch(
+    extension_name: String,
+    branch: String,
+    global: bool,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+extension::move_extension(
+    extension_name: String,
+    source: String,
+    destination: String,
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_get_status(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<LanSyncStatus, CommandError>
+lan_sync::lan_sync_start_server(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<LanSyncStatus, CommandError>
+lan_sync::lan_sync_stop_server(app_state: State<'_, Arc<AppState>>)-> Result<(), CommandError>
+lan_sync::lan_sync_get_pairing_info(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<LanSyncPairingInfoDto, CommandError>
+lan_sync::lan_sync_request_pairing(
+    app_state: State<'_, Arc<AppState>>,
+    pair_uri: String,
+)-> Result<LanSyncPairedDeviceDto, CommandError>
+lan_sync::lan_sync_discover_devices(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<LanDiscoveredDevice>, CommandError>
+lan_sync::lan_sync_connect_address(
+    app_state: State<'_, Arc<AppState>>,
+    address: String,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_set_device_name(
+    app_state: State<'_, Arc<AppState>>,
+    name: String,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_pair_device(
+    app_state: State<'_, Arc<AppState>>,
+    device_id: String,
+)-> Result<LanSyncPairedDeviceDto, CommandError>
+lan_sync::lan_sync_confirm_pairing(
+    app_state: State<'_, Arc<AppState>>,
+    request_id: String,
+    accept: bool,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_list_devices(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<LanSyncPairedDeviceDto>, CommandError>
+lan_sync::lan_sync_remove_device(
+    app_state: State<'_, Arc<AppState>>,
+    device_id: String,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_sync_from_device(
+    app_state: State<'_, Arc<AppState>>,
+    device_id: String,
+    options: SyncOperationOptions,
+)-> Result<SyncJobReport, CommandError>
+lan_sync::lan_sync_push_to_device(
+    app_state: State<'_, Arc<AppState>>,
+    device_id: String,
+    options: SyncOperationOptions,
+)-> Result<SyncJobReport, CommandError>
+lan_sync::lan_sync_set_sync_mode(
+    app_state: State<'_, Arc<AppState>>,
+    mode: SyncMode,
+    persist: bool,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_clear_sync_mode_override(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<(), CommandError>
+lan_sync::lan_sync_set_overwrite_policy(
+    app_state: State<'_, Arc<AppState>>,
+    overwrite_policy: OverwritePolicy,
+)-> Result<(), CommandError>
+tt_sync::tt_sync_pair(
+    app_state: State<'_, Arc<AppState>>,
+    pair_uri: String,
+)-> Result<TtSyncPairedServerDto, CommandError>
+tt_sync::tt_sync_list_servers(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<Vec<TtSyncPairedServerDto>, CommandError>
+tt_sync::tt_sync_remove_server(
+    app_state: State<'_, Arc<AppState>>,
+    server_device_id: String,
+)-> Result<(), CommandError>
+tt_sync::tt_sync_pull(
+    app_state: State<'_, Arc<AppState>>,
+    server_device_id: String,
+    mode: SyncMode,
+    options: SyncOperationOptions,
+)-> Result<SyncJobReport, CommandError>
+tt_sync::tt_sync_push(
+    app_state: State<'_, Arc<AppState>>,
+    server_device_id: String,
+    mode: SyncMode,
+    options: SyncOperationOptions,
+)-> Result<SyncJobReport, CommandError>
+sync::sync_get_dataset_catalog()-> SyncDatasetCatalogDto
+sync_automation::sync_automation_get_config(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<SyncAutomationConfig, CommandError>
+sync_automation::sync_automation_update_config(
+    app_state: State<'_, Arc<AppState>>,
+    config: SyncAutomationConfig,
+)-> Result<SyncAutomationConfig, CommandError>
+sync_automation::sync_automation_get_status(
+    app_state: State<'_, Arc<AppState>>,
+)-> Result<SyncAutomationStatus, CommandError>

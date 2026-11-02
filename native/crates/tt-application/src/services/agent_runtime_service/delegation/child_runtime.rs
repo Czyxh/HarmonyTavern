@@ -1,0 +1,402 @@
+use serde_json::{Map, Value, json};
+use tt_ports::workspace_fs::WorkspaceWriteGuard;
+
+use super::super::loop_runner::AgentLoopExit;
+use super::rendering::{render_child_task_prompt, render_handoff_task_prompt};
+use super::task_status::task_is_terminal;
+use crate::dto::agent_dto::AgentPreparePromptAssemblyDto;
+use crate::errors::ApplicationError;
+use crate::services::agent_profile_service::{
+    AgentProfileResolveInput, ensure_profile_model_configured, validate_chat_profile,
+};
+use crate::services::agent_runtime_service::commit_ledger::RunCommitLedger;
+use crate::services::agent_runtime_service::continuation::InvocationFrame;
+use crate::services::agent_runtime_service::model_stream_projection::clear_live_invocation;
+use crate::services::agent_runtime_service::prompt_snapshot::{
+    request_summary, runtime_context_from_snapshot,
+};
+use crate::services::agent_runtime_service::skill_scope::{
+    skill_event_summary, skill_scope_order_for_profile,
+};
+use crate::services::agent_runtime_service::tool_snapshot::tool_snapshot_summary;
+use crate::services::agent_runtime_service::{
+    AgentCancelReceiver, AgentRuntimeService, PreparedInvocation,
+};
+use crate::services::prompt_assembly_service::AgentInvocationPromptAssemblyContext;
+use tt_domain::models::agent::profile::ResolvedAgentProfile;
+use tt_domain::models::agent::{
+    AgentDelegationContinuation, AgentInvocation, AgentInvocationStatus, AgentRunEventLevel,
+    AgentRunPresentation, AgentRunSkillScopeRefs, AgentTaskRecord, AgentTaskStatus, WorkspacePath,
+};
+use tt_domain::models::skill::{SkillIndexEntry, SkillScope};
+
+impl AgentRuntimeService {
+    pub(in crate::services::agent_runtime_service) async fn has_pending_child_tasks(
+        &self,
+        run_id: &str,
+        invocation_id: &str,
+    ) -> Result<bool, ApplicationError> {
+        Ok(self
+            .invocation_repository
+            .list_tasks(run_id)
+            .await?
+            .into_iter()
+            .any(|task| {
+                task.parent_invocation_id == invocation_id
+                    && task.continuation == AgentDelegationContinuation::ReturnToParent
+                    && matches!(
+                        task.status,
+                        AgentTaskStatus::Queued | AgentTaskStatus::Running
+                    )
+            }))
+    }
+
+    pub(in crate::services::agent_runtime_service) async fn run_child_task_to_terminal(
+        &self,
+        run_id: &str,
+        task_id: &str,
+        invocation_id: &str,
+        mut frame: Option<InvocationFrame>,
+        cancel: &mut AgentCancelReceiver,
+    ) -> Result<Option<InvocationFrame>, ApplicationError> {
+        let live_projection = self
+            .active_run_handle(run_id)
+            .await?
+            .live_projection
+            .clone();
+        let result = Box::pin(self.execute_child_invocation_body(
+            run_id,
+            task_id,
+            invocation_id,
+            &mut frame,
+            cancel,
+        ))
+        .await;
+        clear_live_invocation(&live_projection, invocation_id);
+        if let Err(error) = result {
+            let was_cancelled = matches!(error, ApplicationError::Cancelled(_));
+            let task = self
+                .invocation_repository
+                .load_task(run_id, task_id)
+                .await?;
+            // task.return can complete while the parent requests cancellation.
+            if task.result_ref.is_some() {
+                self.finish_child_invocation(
+                    run_id,
+                    invocation_id,
+                    AgentInvocationStatus::Completed,
+                )
+                .await?;
+                return Ok(None);
+            }
+            let task_status = if was_cancelled {
+                AgentTaskStatus::Cancelled
+            } else {
+                AgentTaskStatus::Failed
+            };
+            let invocation_status = if task_status == AgentTaskStatus::Cancelled {
+                AgentInvocationStatus::Cancelled
+            } else {
+                AgentInvocationStatus::Failed
+            };
+            let message = error.to_string();
+            let transition = self
+                .transition_child_task_with_change(
+                    run_id,
+                    task_id,
+                    task_status,
+                    None,
+                    Some(message.clone()),
+                )
+                .await?;
+            if !transition.changed {
+                return Ok(None);
+            }
+            self.finish_child_invocation(run_id, invocation_id, invocation_status)
+                .await?;
+            if was_cancelled {
+                if !*cancel.borrow() {
+                    return Ok(None);
+                }
+                return Ok(frame);
+            }
+            self.event(
+                run_id,
+                AgentRunEventLevel::Warn,
+                "agent_child_invocation_failed",
+                json!({
+                    "taskId": task_id,
+                    "childInvocationId": invocation_id,
+                    "message": message,
+                }),
+            )
+            .await?;
+        }
+        Ok(None)
+    }
+
+    async fn execute_child_invocation_body(
+        &self,
+        run_id: &str,
+        task_id: &str,
+        invocation_id: &str,
+        frame: &mut Option<InvocationFrame>,
+        cancel: &mut AgentCancelReceiver,
+    ) -> Result<(), ApplicationError> {
+        self.ensure_not_cancelled(cancel)?;
+        let task = self
+            .transition_child_task(run_id, task_id, AgentTaskStatus::Running, None, None)
+            .await?;
+        if task.status != AgentTaskStatus::Running {
+            return Err(ApplicationError::Cancelled(format!(
+                "Delegated task `{task_id}` was cancelled before it started"
+            )));
+        }
+        if frame.is_none() {
+            let invocation = self.start_child_invocation(run_id, invocation_id).await?;
+            let prepared = self
+                .prepare_delegated_invocation(invocation, &task, cancel)
+                .await?;
+            *frame = Some(InvocationFrame::new(prepared));
+        }
+        let frame = frame.as_mut().expect("child invocation was prepared");
+        let mut child_commit_ledger = RunCommitLedger::default();
+        let exit = self
+            .run_tool_loop(frame, &mut child_commit_ledger, cancel)
+            .await?;
+        if let AgentLoopExit::Transferred { .. } = exit {
+            return Err(ApplicationError::ValidationError(
+                "agent.child_handoff_denied: delegated tasks cannot hand off".to_string(),
+            ));
+        }
+
+        let task = self
+            .invocation_repository
+            .load_task(run_id, task_id)
+            .await?;
+        if !task_is_terminal(task.status) {
+            return Err(ApplicationError::ValidationError(format!(
+                "agent.child_invocation_missing_return: child invocation `{invocation_id}` ended without terminal task status"
+            )));
+        }
+        self.finish_child_invocation(run_id, invocation_id, AgentInvocationStatus::Completed)
+            .await?;
+        Ok(())
+    }
+
+    pub(in crate::services::agent_runtime_service) async fn resolve_task_profile(
+        &self,
+        task: &AgentTaskRecord,
+    ) -> Result<ResolvedAgentProfile, ApplicationError> {
+        self.profile_service
+            .resolve_profile(AgentProfileResolveInput {
+                profile_id: Some(task.target_profile_id.as_str()),
+                tool_catalog: self.tool_registry.catalog(),
+            })
+            .await
+    }
+
+    pub(in crate::services::agent_runtime_service) async fn prepare_handoff_invocation(
+        &self,
+        run_id: &str,
+        task_id: &str,
+        invocation_id: &str,
+        cancel: &mut AgentCancelReceiver,
+    ) -> Result<PreparedInvocation, ApplicationError> {
+        let task = self
+            .transition_child_task(run_id, task_id, AgentTaskStatus::Running, None, None)
+            .await?;
+        if task.status != AgentTaskStatus::Running {
+            return Err(ApplicationError::Cancelled(format!(
+                "Handoff task `{task_id}` was cancelled before it started"
+            )));
+        }
+        let invocation = self.start_invocation(run_id, invocation_id).await?;
+        self.prepare_delegated_invocation(invocation, &task, cancel)
+            .await
+    }
+
+    async fn prepare_delegated_invocation(
+        &self,
+        invocation: AgentInvocation,
+        task: &AgentTaskRecord,
+        cancel: &mut AgentCancelReceiver,
+    ) -> Result<PreparedInvocation, ApplicationError> {
+        let run_id = invocation.run_id.as_str();
+        let invocation_id = invocation.id.as_str();
+        let mut profile = self.resolve_task_profile(task).await?;
+        ensure_profile_model_configured(&profile)?;
+        let task_prompt = match task.continuation {
+            AgentDelegationContinuation::ReturnToParent => {
+                profile.run.presentation = AgentRunPresentation::Background;
+                render_child_task_prompt(task)
+            }
+            AgentDelegationContinuation::TransferControl => render_handoff_task_prompt(task),
+        };
+        validate_chat_profile(&profile, invocation.exit_policy, profile.run.presentation)?;
+        let prompt_snapshot = self
+            .workspace_files(run_id)
+            .await?
+            .read_text(&WorkspacePath::parse("input/prompt_snapshot.json")?)
+            .await?;
+        let prompt_snapshot: Value = serde_json::from_str(&prompt_snapshot.text).map_err(|error| {
+            ApplicationError::ValidationError(format!(
+                "agent.invalid_prompt_snapshot: input/prompt_snapshot.json is invalid JSON: {error}"
+            ))
+        })?;
+        let run = self.run_repository.load_run(run_id).await?;
+        let prepared_tools = self
+            .prepare_invocation_tools(
+                &profile,
+                run.target.tool_scope(),
+                invocation.exit_policy,
+                invocation_id,
+                false,
+            )
+            .await?;
+        let tool_snapshot = prepared_tools.snapshot;
+        let tool_turn = prepared_tools.turn;
+        let visible_tools = prepared_tools.model_tools;
+        let tool_diagnostics = prepared_tools.diagnostics;
+        let tool_snapshot_path = self.persist_tool_snapshot(run_id, &tool_snapshot).await?;
+        let request = self
+            .prompt_assembly_service
+            .build_prompt_assembly_request(
+                AgentPreparePromptAssemblyDto {
+                    profile_id: Some(profile.id.as_str().to_owned()),
+                    generation_type: run.chat_target()?.generation_type.clone(),
+                    frozen_run_input_snapshot: frozen_run_input_snapshot_from_prompt_snapshot(
+                        &prompt_snapshot,
+                    )?,
+                    json_schema: None,
+                },
+                profile.clone(),
+                &visible_tools,
+                invocation.exit_policy,
+                AgentInvocationPromptAssemblyContext {
+                    agent_task_prompt: Some(task_prompt),
+                    required_agent_prompt_components: vec![
+                        "agentSystemPrompt".into(),
+                        "agentTask".into(),
+                    ],
+                },
+            )
+            .await?;
+        let mut request = self
+            .request_host_prompt_assembly(&invocation, Some(task.id.clone()), request, cancel)
+            .await?;
+        self.resolve_model_binding(run_id, &profile, &mut request)
+            .await?;
+        let accepts_images = request.accepts_images;
+        let (skill_scope_order, effective_skills) = self
+            .resolve_child_effective_skills(&profile, &run.chat_target()?.skill_scope_refs)
+            .await?;
+        let request = self
+            .prepare_invocation_model_request(
+                request,
+                &invocation,
+                &profile,
+                &effective_skills,
+                &visible_tools,
+                tool_turn.choice().clone(),
+            )
+            .await?;
+        self.event(
+            run_id,
+            AgentRunEventLevel::Info,
+            "context_assembled",
+            json!({
+                "request": request_summary(&request),
+                "invocationId": invocation_id,
+                "toolSnapshot": tool_snapshot_summary(&tool_snapshot),
+                "toolSnapshotPath": tool_snapshot_path.as_str(),
+                "toolTurn": &tool_turn,
+                "toolDiagnostics": &tool_diagnostics,
+                "contextPolicy": &profile.context,
+            }),
+        )
+        .await?;
+        self.ensure_not_cancelled(cancel)?;
+
+        let resolved_skills = serde_json::to_string_pretty(&effective_skills).map_err(|error| {
+            ApplicationError::ValidationError(format!(
+                "agent.resolved_skills_serialize_failed: {error}"
+            ))
+        })?;
+        self.workspace_files(run_id)
+            .await?
+            .write_text(
+                &WorkspacePath::parse(format!(
+                    "input/invocations/{invocation_id}/resolved_skills.json"
+                ))?,
+                &resolved_skills,
+                WorkspaceWriteGuard::Unchecked,
+            )
+            .await?;
+        self.event(
+            run_id,
+            AgentRunEventLevel::Info,
+            "skill_scopes_resolved",
+            json!({
+                "invocationId": invocation_id,
+                "profileId": profile.id.as_str(),
+                "scopes": skill_scope_order,
+                "refs": &run.chat_target()?.skill_scope_refs,
+                "effectiveSkills": skill_event_summary(&effective_skills),
+            }),
+        )
+        .await?;
+
+        Ok(PreparedInvocation {
+            runtime_context: runtime_context_from_snapshot(&prompt_snapshot)?,
+            invocation,
+            delegation_task_id: Some(task.id.clone()),
+            profile,
+            tool_snapshot,
+            tool_turn,
+            request,
+            accepts_images,
+            effective_skills,
+            session: None,
+        })
+    }
+
+    async fn resolve_child_effective_skills(
+        &self,
+        profile: &ResolvedAgentProfile,
+        refs: &AgentRunSkillScopeRefs,
+    ) -> Result<(Vec<SkillScope>, Vec<SkillIndexEntry>), ApplicationError> {
+        let scope_order = skill_scope_order_for_profile(profile, refs)?;
+        let effective_skills = self
+            .skill_service
+            .resolve_effective_skills(&scope_order, &profile.skills)
+            .await?;
+        Ok((scope_order, effective_skills))
+    }
+}
+
+fn frozen_run_input_snapshot_from_prompt_snapshot(
+    prompt_snapshot: &Value,
+) -> Result<Value, ApplicationError> {
+    let object = prompt_snapshot_object(prompt_snapshot)?;
+    object
+        .get("frozenRunInputSnapshot")
+        .or_else(|| object.get("frozen_run_input_snapshot"))
+        .cloned()
+        .ok_or_else(|| {
+            ApplicationError::ValidationError(
+                "agent.invocation_frozen_input_required: delegated invocation assembly requires frozenRunInputSnapshot in input/prompt_snapshot.json"
+                    .to_string(),
+            )
+        })
+}
+
+fn prompt_snapshot_object(
+    prompt_snapshot: &Value,
+) -> Result<&Map<String, Value>, ApplicationError> {
+    prompt_snapshot.as_object().ok_or_else(|| {
+        ApplicationError::ValidationError(
+            "agent.invalid_prompt_snapshot: prompt snapshot must be an object".to_string(),
+        )
+    })
+}

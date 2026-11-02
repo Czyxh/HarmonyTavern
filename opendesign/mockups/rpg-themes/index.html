@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>HarmonyTavern · RPG 主题集</title>
+  <link rel="stylesheet" href="preview.css">
+  <script src="preview.js" defer></script>
+</head>
+<body data-theme="rpg_journal" data-mode="light">
+  <header class="studio-header">
+    <a class="wordmark" href="../../index.html">HARMONY<span>TAVERN</span></a>
+    <span class="edition">RPG THEME COLLECTION / 01—04</span>
+    <a class="source-link" href="../../design-systems/harmonytavern/assets/rpg-sources.json">素材与许可 <span aria-hidden="true">↗</span></a>
+  </header>
+  <main class="workspace">
+    <aside class="design-panel">
+      <p class="eyebrow">为每一种冒险，留一种色调</p>
+      <h1 id="theme-title">冒险者手札</h1>
+      <p class="design-description" id="theme-description">纸页承接故事，古铜标记旅途。</p>
+      <div class="theme-choices" role="group" aria-label="主题风格" id="theme-choices"></div>
+      <fieldset class="mode-selector">
+        <legend>光线</legend>
+        <div class="segmented">
+          <button type="button" data-mode="light" aria-pressed="true">日间</button>
+          <button type="button" data-mode="dark" aria-pressed="false">夜间</button>
+        </div>
+      </fieldset>
+      <div class="design-note"><span class="tiny-rule"></span><p>同一座酒馆，四种世界观。<br>保留原有页面、阅读节奏与操作。</p></div>
+      <p class="prototype-note">视觉演示 · 示例角色与对话仅用于展示<br>切换仅影响此预览，不修改应用数据</p>
+    </aside>
+    <section class="device-stage" aria-label="主题应用预览">
+      <div class="stage-label"><span>HARMONYTAVERN</span><span id="preview-state">日间 / 聊天</span></div>
+      <div class="device">
+        <div class="screen" id="app-screen">
+          <div class="screen-atmosphere" aria-hidden="true"></div>
+          <div class="status-bar"><span>9:41</span><span class="status-icons" aria-hidden="true"><i></i><i></i><b></b></span></div>
+          <header class="app-header"><div><p id="app-subtitle">让故事继续</p><h2 id="app-title">聊天</h2></div><button class="round-action" type="button" id="header-action" aria-label="展示创建聊天视觉"><span class="icon" data-icon="icon_add"></span></button></header>
+          <div id="page-content" class="page-content"></div>
+          <nav class="app-nav" aria-label="预览页面">
+            <button type="button" data-page="chat" aria-current="page"><span class="icon" data-icon="nav_chat"></span><span>聊天</span></button>
+            <button type="button" data-page="characters"><span class="icon" data-icon="nav_character"></span><span>角色</span></button>
+            <button type="button" data-page="library"><span class="icon" data-icon="nav_library"></span><span>资料库</span></button>
+            <button type="button" data-page="settings"><span class="icon" data-icon="icon_settings"></span><span>设置</span></button>
+          </nav>
+        </div>
+      </div>
+      <p class="stage-caption">切换下方导航，查看同一主题在不同页面中的呈现</p>
+    </section>
+    <aside class="material-panel">
+      <p class="eyebrow">THE DESIGN LANGUAGE</p>
+      <figure class="material-art"><img id="material-image" alt="" src=""><figcaption id="material-caption">羊皮纸与古铜</figcaption></figure>
+      <div class="material-index"><span id="theme-number">01</span><div><p id="theme-english">THE WAYFARER'S JOURNAL</p><h3 id="material-title">故事，有了纸页的温度。</h3></div></div>
+      <dl class="design-details"><div><dt>材质</dt><dd id="detail-material"></dd></div><div><dt>造型</dt><dd id="detail-shape"></dd></div><div><dt>点缀</dt><dd id="detail-accent"></dd></div></dl>
+      <div class="palette" id="palette" aria-label="当前配色"></div>
+      <div class="color-values" id="color-values"></div>
+      <p class="material-footnote">装饰停在阅读之外。<br>文字与真实品牌标识始终保持清晰。</p>
+    </aside>
+  </main>
+  <div class="toast" role="status" id="toast"></div>
+</body>
+</html>

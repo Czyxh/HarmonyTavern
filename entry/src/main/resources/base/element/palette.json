@@ -1,0 +1,102 @@
+{
+  "color": [
+    { "name": "headerButtonTint", "value": "#99F5F2FF" },
+    { "name": "headerButtonHighlight", "value": "#D9FFFFFF" },
+    { "name": "headerButtonClear", "value": "#00FFFFFF" },
+    { "name": "headerButtonReflection", "value": "#47FFFFFF" },
+    { "name": "headerFadeTop", "value": "#B3E8EEE7" },
+    { "name": "headerFadeMiddle", "value": "#59E8EEE7" },
+    { "name": "headerFadeEnd", "value": "#00E8EEE7" },
+    { "name": "lensTint", "value": "#91F5F2FF" },
+    { "name": "lensHighlight", "value": "#A6FFFFFF" },
+    { "name": "lensReflection", "value": "#38B6A8ED" },
+    { "name": "lensEdge", "value": "#E6FFFFFF" },
+    { "name": "dockTint", "value": "#70FFFFFF" },
+    { "name": "dockHighlight", "value": "#55FFFFFF" },
+    { "name": "dockReflection", "value": "#14B9AEED" },
+    {
+      "name": "bgBase",
+      "value": "#E8EEE7"
+    },
+    {
+      "name": "bgSurface",
+      "value": "#F4F6EF"
+    },
+    {
+      "name": "bgSurfaceHigh",
+      "value": "#DDE5DB"
+    },
+    {
+      "name": "borderSubtle",
+      "value": "#BDC6CB"
+    },
+    {
+      "name": "borderStrong",
+      "value": "#CAD0E0"
+    },
+    {
+      "name": "textPrimary",
+      "value": "#20233A"
+    },
+    {
+      "name": "textSecondary",
+      "value": "#555D76"
+    },
+    {
+      "name": "textTertiary",
+      "value": "#555F73"
+    },
+    {
+      "name": "textInverse",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "accent",
+      "value": "#594BC9"
+    },
+    {
+      "name": "accentPressed",
+      "value": "#4D3DBB"
+    },
+    {
+      "name": "accentContainer",
+      "value": "#EEEAFE"
+    },
+    {
+      "name": "danger",
+      "value": "#A3273D"
+    },
+    {
+      "name": "dangerContainer",
+      "value": "#FDECF0"
+    },
+    {
+      "name": "success",
+      "value": "#1F6244"
+    },
+    {
+      "name": "warning",
+      "value": "#794B0E"
+    },
+    {
+      "name": "glassTint",
+      "value": "#DCFFFFFF"
+    },
+    {
+      "name": "glassEdge",
+      "value": "#F4FFFFFF"
+    },
+    {
+      "name": "softShadow",
+      "value": "#142B2855"
+    },
+    {
+      "name": "ambientStart",
+      "value": "#F0EDFF"
+    },
+    {
+      "name": "ambientEnd",
+      "value": "#E8F5FC"
+    }
+  ]
+}

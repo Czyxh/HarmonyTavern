@@ -1,0 +1,78 @@
+/node_modules
+/oh_modules
+/local.properties
+/.idea
+**/build
+/.hvigor
+.cxx
+/.clangd
+/.clang-format
+/.clang-tidy
+**/.test
+/.appanalyzer
+
+# ---------- HarmonyTavern 追加（DevEco 默认项以上，勿删）----------
+# 判定标准：删掉之后跑一条命令能回来 → 忽略。
+
+# Rust 构建产物：约 4 GB，且按 ABI 分开
+/native/target/
+/target/
+
+# 双 ABI 原生库：由 native/scripts/build.ps1 生成，属派生物
+# 克隆后先跑（否则 HAP 里没有 .so）：
+#   powershell -NoProfile -ExecutionPolicy Bypass -File .\native\scripts\build.ps1 -Arch x86_64
+#   powershell -NoProfile -ExecutionPolicy Bypass -File .\native\scripts\build.ps1 -Arch arm64-v8a
+/entry/libs/x86_64/
+/entry/libs/arm64-v8a/
+
+# 上游参考快照：只读参照，不属于本工程源码（62.9 MB）
+# 需要时从 https://github.com/Darkatse/TauriTavern 重新拉取
+/tauritavern-ref/
+
+# 打包产物
+*.hap
+*.har
+*.hsp
+
+# 工具链临时物
+*.pdb
+*.ilk
+*.exp
+.DS_Store
+Thumbs.db
+
+# ---------- 开源发布追加 ----------
+# 内置辅助模型密钥：私有，绝不提交。克隆者按 README 自行放入自己的密钥。
+/entry/src/main/resources/rawfile/builtin/siliconflow.key
+
+# 个人备份、已打包的 HAP（内含密钥）、第三方/参考快照、本机虚拟环境
+/backups/
+/dist/
+/ui-backup-*/
+/ohos-rs-ref/
+/promo/vendor/
+*.hap
+*.har
+*.log
+
+# 根目录 build/ 里只保留可复用的测试与打包脚本，其余为本机产物
+!/build/
+/build/*
+!/build/*.cjs
+!/build/*.ps1
+/build/ai-forward-proxy.cjs
+/build/qwen-world-probe.cjs
+
+# 宣传视频/音乐工程的素材与渲染中间产物（体积大、可重新生成）
+/promo/
+# 本机工具状态与根目录零散截图
+/.local/
+/*.jpeg
+/*.jpg
+/*.png
+
+# 签名配置含本机证书路径与密码：只提交 build-profile.json5.example，本地自行填写 signingConfigs
+/build-profile.json5
+# 开发过程的完整对话记录与本机路径
+/docs/CHAT-CONTEXT-*.md
+/docs/AGENT-EXTENSION-REGISTRATION-*.md

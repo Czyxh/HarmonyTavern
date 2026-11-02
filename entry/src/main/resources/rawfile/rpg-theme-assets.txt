@@ -1,0 +1,28 @@
+HarmonyTavern RPG theme artwork
+
+Adventure Journal: composition using castle_beige, tree09, tree13, cloud3 and cloud5
+from Background Elements by Kenney Vleugels / Kenney.
+https://kenney.nl/assets/background-elements
+License: Creative Commons Zero (CC0 1.0).
+https://creativecommons.org/publicdomain/zero/1.0/
+Adaptation: assembled landscape, new background hills, reduced saturation, resize.
+
+Pixel Traveler: Tiny Town 1.1, Sample.png by Kenney.
+https://kenney.nl/assets/tiny-town
+License: Creative Commons Zero (CC0 1.0).
+Adaptation: crop and nearest-neighbor resize, final JPEG export.
+
+Vermilion Tale: Fine Wind, Clear Weather (Red Fuji), Katsushika Hokusai.
+Wikimedia Commons file page ID 39740407.
+https://commons.wikimedia.org/w/index.php?curid=39740407
+License declaration: Public domain; faithful reproduction of public-domain artwork.
+Adaptation: landscape crop, resize, JPEG compression.
+
+Ember Dungeon: The Abbey in the Oakwood, Caspar David Friedrich.
+Wikimedia Commons file page ID 13265468.
+https://commons.wikimedia.org/w/index.php?curid=13265468
+License declaration: Public domain; faithful reproduction of public-domain artwork.
+Adaptation: crop, reduced saturation, resize, JPEG compression.
+
+Transparent grain, grid and corner frames are project-created decorative assets.
+Runtime artwork is bundled locally; selecting a theme makes no network requests.

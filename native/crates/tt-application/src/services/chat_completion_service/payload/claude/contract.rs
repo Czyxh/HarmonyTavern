@@ -1,0 +1,66 @@
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) enum ClaudeThinkingMode {
+    Unsupported,
+    Manual,
+    Adaptive,
+}
+
+/// Only the model differences needed to build the native request.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(super) struct ClaudeModelContract {
+    pub(super) supports_sampling: bool,
+    pub(super) sampling_params_mutually_exclusive: bool,
+    pub(super) thinking: ClaudeThinkingMode,
+    pub(super) supports_output_effort: bool,
+    pub(super) supports_xhigh_output_effort: bool,
+    pub(super) thinking_defaults_on: bool,
+    pub(super) supports_assistant_prefill: bool,
+    pub(super) supports_json_output: bool,
+}
+
+impl ClaudeModelContract {
+    pub(super) fn resolve(model: &str) -> Self {
+        let model = model.trim().to_ascii_lowercase();
+        let matches = |prefixes: &[&str]| prefixes.iter().any(|prefix| model.starts_with(prefix));
+        let claude45 = matches(&["claude-opus-4-5", "claude-sonnet-4-5", "claude-haiku-4-5"]);
+        let claude46 = matches(&["claude-opus-4-6", "claude-sonnet-4-6"]);
+        let claude5 = matches(&[
+            "claude-opus-5",
+            "claude-fable-5",
+            "claude-mythos-5",
+            "claude-sonnet-5",
+            "claude-haiku-5",
+        ]);
+        let adaptive_only = claude5 || matches(&["claude-opus-4-7", "claude-opus-4-8"]);
+
+        let claude4 = matches(&["claude-opus-4", "claude-sonnet-4"])
+            && !claude45
+            && !claude46
+            && !adaptive_only;
+
+        Self {
+            supports_sampling: !adaptive_only,
+            sampling_params_mutually_exclusive: claude45
+                || claude46
+                || model.starts_with("claude-opus-4-1"),
+            thinking: if adaptive_only || claude46 {
+                ClaudeThinkingMode::Adaptive
+            } else if claude4 || claude45 || model.starts_with("claude-3-7") {
+                ClaudeThinkingMode::Manual
+            } else {
+                ClaudeThinkingMode::Unsupported
+            },
+            supports_output_effort: adaptive_only
+                || claude46
+                || model.starts_with("claude-opus-4-5"),
+            supports_xhigh_output_effort: adaptive_only,
+            thinking_defaults_on: claude5,
+            supports_assistant_prefill: !claude46 && !adaptive_only,
+            supports_json_output: matches(&[
+                "claude-fable-5-1",
+                "claude-opus-5-5",
+                "claude-sonnet-5-5",
+            ]),
+        }
+    }
+}

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>HarmonyTavern · 故事入杯 · 微立体版</title><defs>
+    <mask id="story" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+      <rect width="1024" height="1024" fill="white"/>
+      <path d="M342 408Q405 388 474 427V574Q405 540 342 556ZM498 427Q567 388 630 408V556Q567 540 498 574Z" fill="black" transform="translate(-40 0)"/>
+    </mask>
+  
+  <linearGradient id="background" x1="0" y1="0" x2="0.85" y2="1">
+    <stop stop-color="#64774F"/><stop offset="0.48" stop-color="#465C37"/><stop offset="1" stop-color="#34482B"/>
+  </linearGradient>
+  <radialGradient id="light" cx="0.2" cy="0.08" r="0.9">
+    <stop stop-color="#DCE6BE" stop-opacity="0.15"/><stop offset="1" stop-color="#DCE6BE" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="ceramic" x1="0" y1="0" x2="0.65" y2="1">
+    <stop stop-color="#FFFBF2"/><stop offset="0.5" stop-color="#F5EDDC"/><stop offset="1" stop-color="#E2D3B3"/>
+  </linearGradient>
+  <linearGradient id="handle" x1="0" y1="0" x2="1" y2="0.9">
+    <stop stop-color="#E7DABD"/><stop offset="0.55" stop-color="#F5EDDC"/><stop offset="1" stop-color="#CDBD9B"/>
+  </linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#FFF0BE"/><stop offset="0.24" stop-color="#EBD093"/><stop offset="0.68" stop-color="#D9B879"/><stop offset="1" stop-color="#BE9756"/>
+  </linearGradient>
+  <filter id="shadow" x="-30%" y="-25%" width="170%" height="175%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="15" result="blur"/>
+    <feOffset in="blur" dx="9" dy="21" result="offset"/>
+    <feFlood flood-color="#162211" flood-opacity="0.27"/>
+    <feComposite in2="offset" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="rimShadow" x="-20%" y="-80%" width="150%" height="320%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+    <feOffset in="blur" dx="0" dy="7" result="offset"/>
+    <feFlood flood-color="#172410" flood-opacity="0.24"/>
+    <feComposite in2="offset" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs><defs><clipPath id="rounded"><rect width="1024" height="1024" rx="224"/></clipPath></defs><g clip-path="url(#rounded)"><rect width="1024" height="1024" fill="url(#background)"/><rect width="1024" height="1024" fill="url(#light)"/><rect x="2" y="2" width="1020" height="1020" rx="222" fill="none" stroke="#F0F1D1" stroke-opacity="0.16" stroke-width="3"/><g filter="url(#shadow)">
+  <g transform="translate(0 9)"><path d="M682 368H730C812 368 854 410 854 488V500C854 578 812 620 730 620H682V566H730Q798 566 798 500V488Q798 422 730 422H682Z" fill="#AFA182" transform="translate(-40 0)" />
+    <g mask="url(#story)"><path d="M310 330H662Q702 330 702 370V596Q702 670 628 670H421L308 748V663Q270 647 270 606V370Q270 330 310 330Z" fill="#B9AB8C" transform="translate(-40 0)" /></g></g>
+  <path d="M682 368H730C812 368 854 410 854 488V500C854 578 812 620 730 620H682V566H730Q798 566 798 500V488Q798 422 730 422H682Z" fill="url(#handle)" transform="translate(-40 0)" stroke="#FFFBEC" stroke-width="2" stroke-opacity="0.55"/>
+    <g mask="url(#story)"><path d="M310 330H662Q702 330 702 370V596Q702 670 628 670H421L308 748V663Q270 647 270 606V370Q270 330 310 330Z" fill="url(#ceramic)" transform="translate(-40 0)" stroke="#FFFBEC" stroke-width="2" stroke-opacity="0.55"/></g>
+</g>
+<g filter="url(#rimShadow)">
+  <rect x="230" y="268" width="432" height="44" rx="22" fill="#A47E43"/>
+  <rect x="230" y="262" width="432" height="44" rx="22" fill="url(#gold)" stroke="#FFF1C6" stroke-opacity="0.65" stroke-width="2"/>
+  <path d="M254 269H638" stroke="#FFF5D6" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round"/>
+</g></g></svg>
